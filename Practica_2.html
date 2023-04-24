@@ -357,7 +357,1042 @@ display: none;
 </div>
 
 
+<div id="pregunta-1" class="section level3">
+<h3>Pregunta 1</h3>
+<p>1. Descargar la página web de la URL indicada, y almacenarlo en un
+formato de R apto para ser tratado.</p>
+<pre class="r"><code>#URL
+url &lt;- &quot;https://www.mediawiki.org/wiki/MediaWiki&quot;
+#Download page
+page &lt;- GET(url)
+#Status
+status_code(page)</code></pre>
+<pre><code>## [1] 200</code></pre>
+<pre class="r"><code>#De HTML a formato XML
+parsed_page &lt;- htmlParse(content(page, as = &quot;text&quot;))</code></pre>
+<p>2. Analizar el contenido de la web, buscando el título de la página
+(que en HTML se etiqueta como “title”).</p>
+<pre class="r"><code>#Título pagina
+title &lt;- xpathSApply(parsed_page, &quot;//title&quot;, xmlValue)
+title</code></pre>
+<pre><code>## [1] &quot;MediaWiki&quot;</code></pre>
+<pre class="r"><code>#Styless
+stylesheets &lt;- xpathSApply(parsed_page, &quot;//link[@rel=&#39;stylesheet&#39;]/@href&quot;)
+stylesheets</code></pre>
+<pre><code>##                                                                                                                                                                                                                                                                                                                           href 
+## &quot;/w/load.php?lang=en&amp;modules=ext.discussionTools.init.styles%7Cext.uls.pt%7Cext.visualEditor.desktopArticleTarget.noscript%7Cext.wikimediaBadges%7Cmediawiki.ui.button%2Cicon%7Cmediawiki.widgets.styles%7Coojs-ui-core.icons%2Cstyles%7Coojs-ui.styles.indicators%7Cskins.vector.icons%2Cstyles&amp;only=styles&amp;skin=vector-2022&quot; 
+##                                                                                                                                                                                                                                                                                                                           href 
+##                                                                                                                                                                                                                                              &quot;/w/load.php?lang=en&amp;modules=ext.gadget.site-styles&amp;only=styles&amp;skin=vector-2022&quot; 
+##                                                                                                                                                                                                                                                                                                                           href 
+##                                                                                                                                                                                                                                                         &quot;/w/load.php?lang=en&amp;modules=site.styles&amp;only=styles&amp;skin=vector-2022&quot;</code></pre>
+<pre class="r"><code>#Autor
+author &lt;- xpathSApply(parsed_page, &quot;//meta[@name=&#39;author&#39;]/@content&quot;)
+author</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>#Descripcion
+description &lt;- xpathSApply(parsed_page, &quot;//meta[@name=&#39;description&#39;]/@content&quot;)
+description</code></pre>
+<pre><code>## NULL</code></pre>
+<pre class="r"><code>#Codificación Type
+encoding &lt;- xpathSApply(parsed_page, &quot;//meta[@charset]/@charset&quot;)
+encoding</code></pre>
+<pre><code>## charset 
+## &quot;UTF-8&quot;</code></pre>
+<pre class="r"><code>#keywords
+keywords &lt;- xpathSApply(parsed_page, &quot;//meta[@name=&#39;keywords&#39;]/@content&quot;)
+keywords</code></pre>
+<pre><code>## NULL</code></pre>
+<p>3. Analizar el contenido de la web, buscando todos los enlaces (que
+en HTML se etiquetan como “a”), buscando el texto del enlace, así como
+la URL.</p>
+<pre class="r"><code>#Texto del enlace
+links_text &lt;- xpathSApply(parsed_page, &quot;//a&quot;, xmlValue)
+print(links_text)</code></pre>
+<pre><code>##   [1] &quot;Jump to content&quot;                                                    
+##   [2] &quot;Main page&quot;                                                          
+##   [3] &quot;Get MediaWiki&quot;                                                      
+##   [4] &quot;Get extensions&quot;                                                     
+##   [5] &quot;Tech blog&quot;                                                          
+##   [6] &quot;Contribute&quot;                                                         
+##   [7] &quot;User help&quot;                                                          
+##   [8] &quot;FAQ&quot;                                                                
+##   [9] &quot;Technical manual&quot;                                                   
+##  [10] &quot;Support desk&quot;                                                       
+##  [11] &quot;Communication&quot;                                                      
+##  [12] &quot;Developer portal&quot;                                                   
+##  [13] &quot;Code statistics&quot;                                                    
+##  [14] &quot;Community portal&quot;                                                   
+##  [15] &quot;Recent changes&quot;                                                     
+##  [16] &quot;Translate content&quot;                                                  
+##  [17] &quot;Random page&quot;                                                        
+##  [18] &quot;Village pump&quot;                                                       
+##  [19] &quot;Sandbox&quot;                                                            
+##  [20] &quot;\n\t\n\t\t\n&quot;                                                       
+##  [21] &quot;\n\t\tSearch\n\t&quot;                                                   
+##  [22] &quot; English&quot;                                                           
+##  [23] &quot;Create account&quot;                                                     
+##  [24] &quot;Log in&quot;                                                             
+##  [25] &quot; Create account&quot;                                                    
+##  [26] &quot; Log in&quot;                                                            
+##  [27] &quot;learn more&quot;                                                         
+##  [28] &quot;Contributions&quot;                                                      
+##  [29] &quot;Talk&quot;                                                               
+##  [30] &quot;Main Page&quot;                                                          
+##  [31] &quot;Discussion&quot;                                                         
+##  [32] &quot;Read&quot;                                                               
+##  [33] &quot;View source&quot;                                                        
+##  [34] &quot;View history&quot;                                                       
+##  [35] &quot;Read&quot;                                                               
+##  [36] &quot;View source&quot;                                                        
+##  [37] &quot;View history&quot;                                                       
+##  [38] &quot;What links here&quot;                                                    
+##  [39] &quot;Related changes&quot;                                                    
+##  [40] &quot;Upload file&quot;                                                        
+##  [41] &quot;Special pages&quot;                                                      
+##  [42] &quot;Permanent link&quot;                                                     
+##  [43] &quot;Page information&quot;                                                   
+##  [44] &quot;Cite this page&quot;                                                     
+##  [45] &quot;Wikidata item&quot;                                                      
+##  [46] &quot;Create a book&quot;                                                      
+##  [47] &quot;Download as PDF&quot;                                                    
+##  [48] &quot;Printable version&quot;                                                  
+##  [49] &quot;Wikimedia Commons&quot;                                                  
+##  [50] &quot;Meta-Wiki&quot;                                                          
+##  [51] &quot;Multilingual Wikisource&quot;                                            
+##  [52] &quot;Wikispecies&quot;                                                        
+##  [53] &quot;Wikibooks&quot;                                                          
+##  [54] &quot;Wikidata&quot;                                                           
+##  [55] &quot;Wikimania&quot;                                                          
+##  [56] &quot;Wikinews&quot;                                                           
+##  [57] &quot;Wikipedia&quot;                                                          
+##  [58] &quot;Wikiquote&quot;                                                          
+##  [59] &quot;Wikisource&quot;                                                         
+##  [60] &quot;Wikiversity&quot;                                                        
+##  [61] &quot;Wikivoyage&quot;                                                         
+##  [62] &quot;Wiktionary&quot;                                                         
+##  [63] &quot;&quot;                                                                   
+##  [64] &quot;tens of thousands of websites&quot;                                      
+##  [65] &quot;thousands of companies and organizations&quot;                           
+##  [66] &quot;multilingual&quot;                                                       
+##  [67] &quot;free and open&quot;                                                      
+##  [68] &quot;Find out more&quot;                                                      
+##  [69] &quot;if MediaWiki is right for you&quot;                                      
+##  [70] &quot;Download&quot;                                                           
+##  [71] &quot;install&quot;                                                            
+##  [72] &quot;configure&quot;                                                          
+##  [73] &quot;extensions&quot;                                                         
+##  [74] &quot;errors and symptoms&quot;                                                
+##  [75] &quot;FAQ&quot;                                                                
+##  [76] &quot;hosting services&quot;                                                   
+##  [77] &quot;Get professional development and consulting&quot;                        
+##  [78] &quot; &quot;                                                                  
+##  [79] &quot;MediaWiki Stakeholders&quot;                                             
+##  [80] &quot;Learn how to navigate&quot;                                              
+##  [81] &quot; &quot;                                                                  
+##  [82] &quot;Learn how to edit a page&quot;                                           
+##  [83] &quot; &quot;                                                                  
+##  [84] &quot;Learn more about reading, editing, and personal customization&quot;      
+##  [85] &quot; &quot;                                                                  
+##  [86] &quot;developer documentation&quot;                                            
+##  [87] &quot;Wikimedia Developer Portal&quot;                                         
+##  [88] &quot;support desk&quot;                                                       
+##  [89] &quot;Get involved&quot;                                                       
+##  [90] &quot;Report wrong software behavior or a feature proposal&quot;               
+##  [91] &quot; &quot;                                                                  
+##  [92] &quot;MediaWiki 1.35.10, 1.38.6 and 1.39.3 security releases&quot;             
+##  [93] &quot;EMWCon&quot;                                                             
+##  [94] &quot;View livestream&quot;                                                    
+##  [95] &quot;Wikimedia Hackathon&quot;                                                
+##  [96] &quot;@mediawiki@wikis.world&quot;                                             
+##  [97] &quot;More news&quot;                                                          
+##  [98] &quot;Other languages:&quot;                                                   
+##  [99] &quot; &quot;                                                                  
+## [100] &quot;English&quot;                                                            
+## [101] &quot;Afrikaans&quot;                                                          
+## [102] &quot;العربية&quot;                                                            
+## [103] &quot;asturianu&quot;                                                          
+## [104] &quot;беларуская&quot;                                                         
+## [105] &quot;беларуская (тарашкевіца)&quot;                                           
+## [106] &quot;български&quot;                                                          
+## [107] &quot;বাংলা&quot;                                                              
+## [108] &quot;bosanski&quot;                                                           
+## [109] &quot;català&quot;                                                             
+## [110] &quot;کوردی&quot;                                                              
+## [111] &quot;čeština&quot;                                                            
+## [112] &quot;dansk&quot;                                                              
+## [113] &quot;Deutsch&quot;                                                            
+## [114] &quot;español&quot;                                                            
+## [115] &quot;فارسی&quot;                                                              
+## [116] &quot;suomi&quot;                                                              
+## [117] &quot;français&quot;                                                           
+## [118] &quot;ગુજરાતી&quot;                                                             
+## [119] &quot;עברית&quot;                                                              
+## [120] &quot;हिन्दी&quot;                                                              
+## [121] &quot;hrvatski&quot;                                                           
+## [122] &quot;magyar&quot;                                                             
+## [123] &quot;հայերեն&quot;                                                            
+## [124] &quot;Bahasa Indonesia&quot;                                                   
+## [125] &quot;italiano&quot;                                                           
+## [126] &quot;日本語&quot;                                                             
+## [127] &quot;Jawa&quot;                                                               
+## [128] &quot;қазақша&quot;                                                            
+## [129] &quot;한국어&quot;                                                             
+## [130] &quot;Bahasa Melayu&quot;                                                      
+## [131] &quot;Mirandés&quot;                                                           
+## [132] &quot;Nederlands&quot;                                                         
+## [133] &quot;polski&quot;                                                             
+## [134] &quot;português&quot;                                                          
+## [135] &quot;português do Brasil&quot;                                                
+## [136] &quot;română&quot;                                                             
+## [137] &quot;русский&quot;                                                            
+## [138] &quot;sardu&quot;                                                              
+## [139] &quot;සිංහල&quot;                                                               
+## [140] &quot;slovenčina&quot;                                                         
+## [141] &quot;slovenščina&quot;                                                        
+## [142] &quot;Soomaaliga&quot;                                                         
+## [143] &quot;shqip&quot;                                                              
+## [144] &quot;српски / srpski&quot;                                                    
+## [145] &quot;svenska&quot;                                                            
+## [146] &quot;ไทย&quot;                                                                
+## [147] &quot;Türkçe&quot;                                                             
+## [148] &quot;українська&quot;                                                         
+## [149] &quot;Tiếng Việt&quot;                                                         
+## [150] &quot;粵語&quot;                                                               
+## [151] &quot;中文&quot;                                                               
+## [152] &quot;https://www.mediawiki.org/w/index.php?title=MediaWiki&amp;oldid=3878227&quot;
+## [153] &quot;Languages pages&quot;                                                    
+## [154] &quot;Creative Commons Attribution-ShareAlike License&quot;                    
+## [155] &quot;Terms of Use&quot;                                                       
+## [156] &quot;Privacy policy&quot;                                                     
+## [157] &quot;About MediaWiki.org&quot;                                                
+## [158] &quot;Disclaimers&quot;                                                        
+## [159] &quot;Code of Conduct&quot;                                                    
+## [160] &quot;Mobile view&quot;                                                        
+## [161] &quot;Developers&quot;                                                         
+## [162] &quot;Statistics&quot;                                                         
+## [163] &quot;Cookie statement&quot;                                                   
+## [164] &quot;&quot;                                                                   
+## [165] &quot;&quot;</code></pre>
+<pre class="r"><code>#URL
+links_url &lt;- xpathSApply(parsed_page, &quot;//a&quot;, xmlGetAttr, &#39;href&#39;)
+print(links_url)</code></pre>
+<pre><code>##   [1] &quot;#bodyContent&quot;                                                                                                                
+##   [2] &quot;/wiki/MediaWiki&quot;                                                                                                             
+##   [3] &quot;/wiki/Download&quot;                                                                                                              
+##   [4] &quot;/wiki/Special:MyLanguage/Category:Extensions&quot;                                                                                
+##   [5] &quot;//techblog.wikimedia.org/&quot;                                                                                                   
+##   [6] &quot;/wiki/Special:MyLanguage/How_to_contribute&quot;                                                                                  
+##   [7] &quot;/wiki/Special:MyLanguage/Help:Contents&quot;                                                                                      
+##   [8] &quot;/wiki/Special:MyLanguage/Manual:FAQ&quot;                                                                                         
+##   [9] &quot;/wiki/Special:MyLanguage/Manual:Contents&quot;                                                                                    
+##  [10] &quot;/wiki/Project:Support_desk&quot;                                                                                                  
+##  [11] &quot;/wiki/Special:MyLanguage/Communication&quot;                                                                                      
+##  [12] &quot;https://developer.wikimedia.org/&quot;                                                                                            
+##  [13] &quot;/wiki/Development_statistics&quot;                                                                                                
+##  [14] &quot;/wiki/Project:Help&quot;                                                                                                          
+##  [15] &quot;/wiki/Special:RecentChanges&quot;                                                                                                 
+##  [16] &quot;/wiki/Special:LanguageStats&quot;                                                                                                 
+##  [17] &quot;/wiki/Special:Random&quot;                                                                                                        
+##  [18] &quot;/wiki/Project:Village_Pump&quot;                                                                                                  
+##  [19] &quot;/wiki/Project:Sandbox&quot;                                                                                                       
+##  [20] &quot;/wiki/MediaWiki&quot;                                                                                                             
+##  [21] &quot;/wiki/Special:Search&quot;                                                                                                        
+##  [22] &quot;#&quot;                                                                                                                           
+##  [23] &quot;/w/index.php?title=Special:CreateAccount&amp;returnto=MediaWiki&quot;                                                                 
+##  [24] &quot;/w/index.php?title=Special:UserLogin&amp;returnto=MediaWiki&quot;                                                                     
+##  [25] &quot;/w/index.php?title=Special:CreateAccount&amp;returnto=MediaWiki&quot;                                                                 
+##  [26] &quot;/w/index.php?title=Special:UserLogin&amp;returnto=MediaWiki&quot;                                                                     
+##  [27] &quot;/wiki/Help:Introduction&quot;                                                                                                     
+##  [28] &quot;/wiki/Special:MyContributions&quot;                                                                                               
+##  [29] &quot;/wiki/Special:MyTalk&quot;                                                                                                        
+##  [30] &quot;/wiki/MediaWiki&quot;                                                                                                             
+##  [31] &quot;/wiki/Talk:MediaWiki&quot;                                                                                                        
+##  [32] &quot;/wiki/MediaWiki&quot;                                                                                                             
+##  [33] &quot;/w/index.php?title=MediaWiki&amp;action=edit&quot;                                                                                    
+##  [34] &quot;/w/index.php?title=MediaWiki&amp;action=history&quot;                                                                                 
+##  [35] &quot;/wiki/MediaWiki&quot;                                                                                                             
+##  [36] &quot;/w/index.php?title=MediaWiki&amp;action=edit&quot;                                                                                    
+##  [37] &quot;/w/index.php?title=MediaWiki&amp;action=history&quot;                                                                                 
+##  [38] &quot;/wiki/Special:WhatLinksHere/MediaWiki&quot;                                                                                       
+##  [39] &quot;/wiki/Special:RecentChangesLinked/MediaWiki&quot;                                                                                 
+##  [40] &quot;//commons.wikimedia.org/wiki/Special:UploadWizard&quot;                                                                           
+##  [41] &quot;/wiki/Special:SpecialPages&quot;                                                                                                  
+##  [42] &quot;/w/index.php?title=MediaWiki&amp;oldid=3878227&quot;                                                                                  
+##  [43] &quot;/w/index.php?title=MediaWiki&amp;action=info&quot;                                                                                    
+##  [44] &quot;/w/index.php?title=Special:CiteThisPage&amp;page=MediaWiki&amp;id=3878227&amp;wpFormIdentifier=titleform&quot;                                
+##  [45] &quot;https://www.wikidata.org/wiki/Special:EntityPage/Q5296&quot;                                                                      
+##  [46] &quot;/w/index.php?title=Special:Book&amp;bookcmd=book_creator&amp;referer=MediaWiki&quot;                                                      
+##  [47] &quot;/w/index.php?title=Special:DownloadAsPdf&amp;page=MediaWiki&amp;action=show-download-screen&quot;                                         
+##  [48] &quot;/w/index.php?title=MediaWiki&amp;printable=yes&quot;                                                                                  
+##  [49] &quot;https://commons.wikimedia.org/wiki/Main_Page&quot;                                                                                
+##  [50] &quot;https://meta.wikimedia.org/wiki/Main_Page&quot;                                                                                   
+##  [51] &quot;https://wikisource.org/wiki/Main_Page&quot;                                                                                       
+##  [52] &quot;https://species.wikimedia.org/wiki/Main_Page&quot;                                                                                
+##  [53] &quot;https://en.wikibooks.org/wiki/Main_Page&quot;                                                                                     
+##  [54] &quot;https://www.wikidata.org/wiki/Wikidata:Main_Page&quot;                                                                            
+##  [55] &quot;https://wikimania.wikimedia.org/wiki/Wikimania&quot;                                                                              
+##  [56] &quot;https://en.wikinews.org/wiki/Main_Page&quot;                                                                                      
+##  [57] &quot;https://en.wikipedia.org/wiki/Main_Page&quot;                                                                                     
+##  [58] &quot;https://en.wikiquote.org/wiki/Main_Page&quot;                                                                                     
+##  [59] &quot;https://en.wikisource.org/wiki/Main_Page&quot;                                                                                    
+##  [60] &quot;https://en.wikiversity.org/wiki/Wikiversity:Main_Page&quot;                                                                       
+##  [61] &quot;https://en.wikivoyage.org/wiki/Main_Page&quot;                                                                                    
+##  [62] &quot;https://en.wiktionary.org/wiki/Wiktionary:Main_Page&quot;                                                                         
+##  [63] &quot;/wiki/File:Wikimedia_Hackathon_Prague_2019_-_Group_Photo_-_CLK_-_cropped.jpg&quot;                                                
+##  [64] &quot;/wiki/Special:MyLanguage/Sites_using_MediaWiki&quot;                                                                              
+##  [65] &quot;/wiki/Special:MyLanguage/MediaWiki_testimonials&quot;                                                                             
+##  [66] &quot;/wiki/Special:MyLanguage/Localisation&quot;                                                                                       
+##  [67] &quot;https://en.wikipedia.org/wiki/FLOSS&quot;                                                                                         
+##  [68] &quot;/wiki/Special:MyLanguage/Manual:What_is_MediaWiki%3F&quot;                                                                        
+##  [69] &quot;/wiki/Special:MyLanguage/Manual:Deciding_whether_to_use_a_wiki_as_your_website_type&quot;                                         
+##  [70] &quot;/wiki/Special:MyLanguage/Download&quot;                                                                                           
+##  [71] &quot;/wiki/Special:MyLanguage/Manual:Installation_guide&quot;                                                                          
+##  [72] &quot;/wiki/Special:MyLanguage/Manual:System_administration&quot;                                                                       
+##  [73] &quot;/wiki/Special:MyLanguage/Manual:Extensions&quot;                                                                                  
+##  [74] &quot;/wiki/Special:MyLanguage/Manual:Errors_and_symptoms&quot;                                                                         
+##  [75] &quot;/wiki/Special:MyLanguage/Manual:FAQ&quot;                                                                                         
+##  [76] &quot;/wiki/Special:MyLanguage/Hosting_services&quot;                                                                                   
+##  [77] &quot;/wiki/Special:MyLanguage/Professional_development_and_consulting&quot;                                                            
+##  [78] &quot;/wiki/Professional_development_and_consulting&quot;                                                                               
+##  [79] &quot;/wiki/Special:MyLanguage/MediaWiki_Stakeholders%27_Group&quot;                                                                    
+##  [80] &quot;/wiki/Special:MyLanguage/Help:Navigation&quot;                                                                                    
+##  [81] &quot;/wiki/Help:Navigation&quot;                                                                                                       
+##  [82] &quot;/wiki/Special:MyLanguage/Help:Editing_pages&quot;                                                                                 
+##  [83] &quot;/wiki/Help:Editing_pages&quot;                                                                                                    
+##  [84] &quot;/wiki/Special:MyLanguage/Help:Contents&quot;                                                                                      
+##  [85] &quot;/wiki/Help:Contents&quot;                                                                                                         
+##  [86] &quot;/wiki/Special:MyLanguage/Developer_hub&quot;                                                                                      
+##  [87] &quot;https://developer.wikimedia.org&quot;                                                                                             
+##  [88] &quot;/wiki/Project:Support_desk&quot;                                                                                                  
+##  [89] &quot;/wiki/Special:MyLanguage/How_to_contribute&quot;                                                                                  
+##  [90] &quot;/wiki/Special:MyLanguage/How_to_report_a_bug&quot;                                                                                
+##  [91] &quot;/wiki/How_to_report_a_bug&quot;                                                                                                   
+##  [92] &quot;https://lists.wikimedia.org/hyperkitty/list/mediawiki-announce@lists.wikimedia.org/message/6UQBHI5FWLATD7QO7DI4YS54U7XSSLAN/&quot;
+##  [93] &quot;/wiki/Special:MyLanguage/EMWCon_Spring_2023&quot;                                                                                 
+##  [94] &quot;https://www.youtube.com/watch?v=r0xEhy9bBFU&quot;                                                                                 
+##  [95] &quot;/wiki/Special:MyLanguage/Wikimedia_Hackathon_2023&quot;                                                                           
+##  [96] &quot;https://wikis.world/@mediawiki&quot;                                                                                              
+##  [97] &quot;https://www.mediawiki.org/wiki/Special:MyLanguage/News&quot;                                                                      
+##  [98] &quot;/wiki/Special:MyLanguage/Project:Language_policy&quot;                                                                            
+##  [99] &quot;/wiki/Project:Language_policy&quot;                                                                                               
+## [100] &quot;/wiki/Template:Main_page&quot;                                                                                                    
+## [101] &quot;https://www.mediawiki.org/wiki/Template:Main_page/af&quot;                                                                        
+## [102] &quot;https://www.mediawiki.org/wiki/Template:Main_page/ar&quot;                                                                        
+## [103] &quot;https://www.mediawiki.org/wiki/Template:Main_page/ast&quot;                                                                       
+## [104] &quot;https://www.mediawiki.org/wiki/Template:Main_page/be&quot;                                                                        
+## [105] &quot;https://www.mediawiki.org/wiki/Template:Main_page/be-tarask&quot;                                                                 
+## [106] &quot;https://www.mediawiki.org/wiki/Template:Main_page/bg&quot;                                                                        
+## [107] &quot;https://www.mediawiki.org/wiki/Template:Main_page/bn&quot;                                                                        
+## [108] &quot;https://www.mediawiki.org/wiki/Template:Main_page/bs&quot;                                                                        
+## [109] &quot;https://www.mediawiki.org/wiki/Template:Main_page/ca&quot;                                                                        
+## [110] &quot;https://www.mediawiki.org/wiki/Template:Main_page/ckb&quot;                                                                       
+## [111] &quot;https://www.mediawiki.org/wiki/Template:Main_page/cs&quot;                                                                        
+## [112] &quot;https://www.mediawiki.org/wiki/Template:Main_page/da&quot;                                                                        
+## [113] &quot;https://www.mediawiki.org/wiki/Template:Main_page/de&quot;                                                                        
+## [114] &quot;https://www.mediawiki.org/wiki/Template:Main_page/es&quot;                                                                        
+## [115] &quot;https://www.mediawiki.org/wiki/Template:Main_page/fa&quot;                                                                        
+## [116] &quot;https://www.mediawiki.org/wiki/Template:Main_page/fi&quot;                                                                        
+## [117] &quot;https://www.mediawiki.org/wiki/Template:Main_page/fr&quot;                                                                        
+## [118] &quot;https://www.mediawiki.org/wiki/Template:Main_page/gu&quot;                                                                        
+## [119] &quot;https://www.mediawiki.org/wiki/Template:Main_page/he&quot;                                                                        
+## [120] &quot;https://www.mediawiki.org/wiki/Template:Main_page/hi&quot;                                                                        
+## [121] &quot;https://www.mediawiki.org/wiki/Template:Main_page/hr&quot;                                                                        
+## [122] &quot;https://www.mediawiki.org/wiki/Template:Main_page/hu&quot;                                                                        
+## [123] &quot;https://www.mediawiki.org/wiki/Template:Main_page/hy&quot;                                                                        
+## [124] &quot;https://www.mediawiki.org/wiki/Template:Main_page/id&quot;                                                                        
+## [125] &quot;https://www.mediawiki.org/wiki/Template:Main_page/it&quot;                                                                        
+## [126] &quot;https://www.mediawiki.org/wiki/Template:Main_page/ja&quot;                                                                        
+## [127] &quot;https://www.mediawiki.org/wiki/Template:Main_page/jv&quot;                                                                        
+## [128] &quot;https://www.mediawiki.org/wiki/Template:Main_page/kk&quot;                                                                        
+## [129] &quot;https://www.mediawiki.org/wiki/Template:Main_page/ko&quot;                                                                        
+## [130] &quot;https://www.mediawiki.org/wiki/Template:Main_page/ms&quot;                                                                        
+## [131] &quot;https://www.mediawiki.org/wiki/Template:Main_page/mwl&quot;                                                                       
+## [132] &quot;https://www.mediawiki.org/wiki/Template:Main_page/nl&quot;                                                                        
+## [133] &quot;https://www.mediawiki.org/wiki/Template:Main_page/pl&quot;                                                                        
+## [134] &quot;https://www.mediawiki.org/wiki/Template:Main_page/pt&quot;                                                                        
+## [135] &quot;https://www.mediawiki.org/wiki/Template:Main_page/pt-br&quot;                                                                     
+## [136] &quot;https://www.mediawiki.org/wiki/Template:Main_page/ro&quot;                                                                        
+## [137] &quot;https://www.mediawiki.org/wiki/Template:Main_page/ru&quot;                                                                        
+## [138] &quot;https://www.mediawiki.org/wiki/Template:Main_page/sc&quot;                                                                        
+## [139] &quot;https://www.mediawiki.org/wiki/Template:Main_page/si&quot;                                                                        
+## [140] &quot;https://www.mediawiki.org/wiki/Template:Main_page/sk&quot;                                                                        
+## [141] &quot;https://www.mediawiki.org/wiki/Template:Main_page/sl&quot;                                                                        
+## [142] &quot;https://www.mediawiki.org/wiki/Template:Main_page/so&quot;                                                                        
+## [143] &quot;https://www.mediawiki.org/wiki/Template:Main_page/sq&quot;                                                                        
+## [144] &quot;https://www.mediawiki.org/wiki/Template:Main_page/sr&quot;                                                                        
+## [145] &quot;https://www.mediawiki.org/wiki/Template:Main_page/sv&quot;                                                                        
+## [146] &quot;https://www.mediawiki.org/wiki/Template:Main_page/th&quot;                                                                        
+## [147] &quot;https://www.mediawiki.org/wiki/Template:Main_page/tr&quot;                                                                        
+## [148] &quot;https://www.mediawiki.org/wiki/Template:Main_page/uk&quot;                                                                        
+## [149] &quot;https://www.mediawiki.org/wiki/Template:Main_page/vi&quot;                                                                        
+## [150] &quot;https://www.mediawiki.org/wiki/Template:Main_page/yue&quot;                                                                       
+## [151] &quot;https://www.mediawiki.org/wiki/Template:Main_page/zh&quot;                                                                        
+## [152] &quot;https://www.mediawiki.org/w/index.php?title=MediaWiki&amp;oldid=3878227&quot;                                                         
+## [153] &quot;/wiki/Category:Languages_pages&quot;                                                                                              
+## [154] &quot;https://creativecommons.org/licenses/by-sa/3.0/&quot;                                                                             
+## [155] &quot;https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use&quot;                                                
+## [156] &quot;https://foundation.wikimedia.org/wiki/Privacy_policy&quot;                                                                        
+## [157] &quot;/wiki/Project:About&quot;                                                                                                         
+## [158] &quot;/wiki/Project:General_disclaimer&quot;                                                                                            
+## [159] &quot;https://www.mediawiki.org/wiki/Special:MyLanguage/Code_of_Conduct&quot;                                                           
+## [160] &quot;//m.mediawiki.org/w/index.php?title=MediaWiki&amp;mobileaction=toggle_view_mobile&quot;                                               
+## [161] &quot;https://developer.wikimedia.org&quot;                                                                                             
+## [162] &quot;https://stats.wikimedia.org/#/www.mediawiki.org&quot;                                                                             
+## [163] &quot;https://foundation.wikimedia.org/wiki/Cookie_statement&quot;                                                                      
+## [164] &quot;https://wikimediafoundation.org/&quot;                                                                                            
+## [165] &quot;https://www.mediawiki.org/&quot;</code></pre>
+<p>4. Generar una tabla con cada enlace encontrado, indicando el texto
+que acompaña el enlace, y el número de veces que aparece un enlace con
+ese mismo objetivo.</p>
+<p>5. Para cada enlace, seguirlo e indicar si está activo (podemos usar
+el código de status HTTP al hacer una petición a esa URL).</p>
+<p>Acontinuación se responden las preguntas 4 y 5:</p>
+<pre class="r"><code>tabla &lt;- data.frame(links_text = character(),
+                    links_original_url = character(),
+                    links_url = character(),
+                    links_relative = character(),
+                    links_internal = character(),
+                    repeticiones = numeric(),
+                    scraps = character(),
+                    stringsAsFactors = FALSE)
 
+frecuencia &lt;- table(links_url)
+
+for (i in 1:length(links_text)) {
+  Sys.sleep(2)
+  print(&quot;round done&quot;)
+  tabla[i, &quot;links_text&quot;] &lt;- links_text[i]
+  tabla[i, &quot;links_original_url&quot;] &lt;- links_url[i]
+  tabla[i, &quot;links_url&quot;] &lt;- links_url[i]
+  tabla[i, &quot;links_relative&quot;] &lt;- &quot;N&quot;
+  tabla[i, &quot;links_internal&quot;] &lt;- &quot;S&quot;
+  tabla[i, &quot;repeticiones&quot;] &lt;- frecuencia[links_url[i]]
+  
+  #si inicia con /wiki/
+  validation_wiki &lt;- startsWith(links_url[i], &quot;/wiki/&quot;)
+  if(validation_wiki) {
+    tabla[i, &quot;links_url&quot;] &lt;- paste0(&quot;https://www.mediawiki.org&quot;, links_url[i])
+    tabla[i, &quot;links_relative&quot;] &lt;- &quot;S&quot;
+  }
+  
+  #si inicia con /https/
+  validation_https &lt;- startsWith(links_url[i], &quot;https:&quot;)
+  if(validation_https) {
+    tabla[i, &quot;links_url&quot;] &lt;- links_url[i]
+    validation_internal &lt;- startsWith(links_url[i], &quot;https://www.mediawiki.org&quot;)
+    if(!validation_internal) {
+      tabla[i, &quot;links_internal&quot;] &lt;- &quot;N&quot;
+    }
+  }
+  
+  #si inicia con //
+  validation_slash &lt;- startsWith(links_url[i], &quot;//&quot;)
+  if(validation_slash) {
+    tabla[i, &quot;links_url&quot;] &lt;- paste0(&quot;https:&quot;, links_url[i])
+    tabla[i, &quot;links_relative&quot;] &lt;- &quot;S&quot;
+  }
+  
+  #si inicia con /w/
+  validation_w &lt;- startsWith(links_url[i], &quot;/w/&quot;)
+  if(validation_w) {
+    tabla[i, &quot;links_url&quot;] &lt;- paste0(&quot;https://www.mediawiki.org&quot;, links_url[i])
+    tabla[i, &quot;links_relative&quot;] &lt;- &quot;S&quot;
+  }
+  
+  #si inicia con /#/
+  validation_hash &lt;- startsWith(links_url[i], &quot;#&quot;)
+  if(validation_hash) {
+    tabla[i, &quot;links_url&quot;] &lt;- paste0(&quot;https://www.mediawiki.org/wiki/MediaWiki&quot;, links_url[i])
+    tabla[i, &quot;links_relative&quot;] &lt;- &quot;S&quot;
+  }
+  
+  print(paste0(&quot;TEST&gt; &quot; , links_url[i]))
+  
+  #obtencion de STATUS CODE
+  code &lt;- status_code(HEAD(tabla[i, &quot;links_url&quot;]))
+  tabla[i, &quot;scraps&quot;] &lt;- code
+  print(code)
+}</code></pre>
+<pre><code>## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; #bodyContent&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Download&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Category:Extensions&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; //techblog.wikimedia.org/&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/How_to_contribute&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Help:Contents&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Manual:FAQ&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Manual:Contents&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Project:Support_desk&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Communication&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://developer.wikimedia.org/&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Development_statistics&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Project:Help&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:RecentChanges&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:LanguageStats&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:Random&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Project:Village_Pump&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Project:Sandbox&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:Search&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; #&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=Special:CreateAccount&amp;returnto=MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=Special:UserLogin&amp;returnto=MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=Special:CreateAccount&amp;returnto=MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=Special:UserLogin&amp;returnto=MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Help:Introduction&quot;
+## [1] 404
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyContributions&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyTalk&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Talk:MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=MediaWiki&amp;action=edit&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=MediaWiki&amp;action=history&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=MediaWiki&amp;action=edit&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=MediaWiki&amp;action=history&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:WhatLinksHere/MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:RecentChangesLinked/MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; //commons.wikimedia.org/wiki/Special:UploadWizard&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:SpecialPages&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=MediaWiki&amp;oldid=3878227&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=MediaWiki&amp;action=info&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=Special:CiteThisPage&amp;page=MediaWiki&amp;id=3878227&amp;wpFormIdentifier=titleform&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.wikidata.org/wiki/Special:EntityPage/Q5296&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=Special:Book&amp;bookcmd=book_creator&amp;referer=MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=Special:DownloadAsPdf&amp;page=MediaWiki&amp;action=show-download-screen&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /w/index.php?title=MediaWiki&amp;printable=yes&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://commons.wikimedia.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://meta.wikimedia.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://wikisource.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://species.wikimedia.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://en.wikibooks.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.wikidata.org/wiki/Wikidata:Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://wikimania.wikimedia.org/wiki/Wikimania&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://en.wikinews.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://en.wikipedia.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://en.wikiquote.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://en.wikisource.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://en.wikiversity.org/wiki/Wikiversity:Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://en.wikivoyage.org/wiki/Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://en.wiktionary.org/wiki/Wiktionary:Main_Page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/File:Wikimedia_Hackathon_Prague_2019_-_Group_Photo_-_CLK_-_cropped.jpg&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Sites_using_MediaWiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/MediaWiki_testimonials&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Localisation&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://en.wikipedia.org/wiki/FLOSS&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Manual:What_is_MediaWiki%3F&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Manual:Deciding_whether_to_use_a_wiki_as_your_website_type&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Download&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Manual:Installation_guide&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Manual:System_administration&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Manual:Extensions&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Manual:Errors_and_symptoms&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Manual:FAQ&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Hosting_services&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Professional_development_and_consulting&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Professional_development_and_consulting&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/MediaWiki_Stakeholders%27_Group&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Help:Navigation&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Help:Navigation&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Help:Editing_pages&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Help:Editing_pages&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Help:Contents&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Help:Contents&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Developer_hub&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://developer.wikimedia.org&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Project:Support_desk&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/How_to_contribute&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/How_to_report_a_bug&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/How_to_report_a_bug&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://lists.wikimedia.org/hyperkitty/list/mediawiki-announce@lists.wikimedia.org/message/6UQBHI5FWLATD7QO7DI4YS54U7XSSLAN/&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/EMWCon_Spring_2023&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.youtube.com/watch?v=r0xEhy9bBFU&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Wikimedia_Hackathon_2023&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://wikis.world/@mediawiki&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Special:MyLanguage/News&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Special:MyLanguage/Project:Language_policy&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Project:Language_policy&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Template:Main_page&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/af&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/ar&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/ast&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/be&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/be-tarask&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/bg&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/bn&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/bs&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/ca&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/ckb&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/cs&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/da&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/de&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/es&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/fa&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/fi&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/fr&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/gu&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/he&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/hi&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/hr&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/hu&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/hy&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/id&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/it&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/ja&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/jv&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/kk&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/ko&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/ms&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/mwl&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/nl&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/pl&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/pt&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/pt-br&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/ro&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/ru&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/sc&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/si&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/sk&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/sl&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/so&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/sq&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/sr&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/sv&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/th&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/tr&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/uk&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/vi&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/yue&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Template:Main_page/zh&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/w/index.php?title=MediaWiki&amp;oldid=3878227&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Category:Languages_pages&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://creativecommons.org/licenses/by-sa/3.0/&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://foundation.wikimedia.org/wiki/Special:MyLanguage/Policy:Terms_of_Use&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://foundation.wikimedia.org/wiki/Privacy_policy&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Project:About&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; /wiki/Project:General_disclaimer&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/wiki/Special:MyLanguage/Code_of_Conduct&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; //m.mediawiki.org/w/index.php?title=MediaWiki&amp;mobileaction=toggle_view_mobile&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://developer.wikimedia.org&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://stats.wikimedia.org/#/www.mediawiki.org&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://foundation.wikimedia.org/wiki/Cookie_statement&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://wikimediafoundation.org/&quot;
+## [1] 200
+## [1] &quot;round done&quot;
+## [1] &quot;TEST&gt; https://www.mediawiki.org/&quot;
+## [1] 200</code></pre>
+</div>
+<div id="pregunta-2" class="section level3">
+<h3>Pregunta 2</h3>
+<p>PREGUNTA 2.1 y 2.2</p>
+<pre class="r"><code>relative &lt;- c(1, 2, 3, 4, 5, 4, 3, 2, 1)
+no_relative &lt;- c(2, 4, 6, 8, 10, 8, 6, 4, 2)
+
+tabla2 &lt;- tabla[tabla$links_relative ==&quot;S&quot;, c(&quot;repeticiones&quot;)]
+tabla3 &lt;- tabla[tabla$links_relative ==&quot;N&quot;, c(&quot;repeticiones&quot;)]
+tabla6 &lt;- tabla[TRUE, c(&quot;links_internal&quot;)]
+tabla7 &lt;- as.numeric(tabla[TRUE, c(&quot;scraps&quot;)])
+tabla7 &lt;- (tabla[TRUE, c(&quot;scraps&quot;)])
+
+# Crear datos
+relative &lt;- tabla2
+no_relative &lt;- tabla3
+
+# Genera 1er histograma
+p1 &lt;- ggplot(data.frame(x=relative), aes(x=x)) + 
+  geom_histogram(aes(y=..count..), fill=&quot;yellow&quot;, alpha=0.5) +
+  labs(title=&quot;Histograma de relative&quot;, x=&quot;Valores&quot;, y=&quot;Frecuencia&quot;) 
+
+# Genera 2do histograma
+p2 &lt;- ggplot(data.frame(x=no_relative), aes(x=x)) + 
+  geom_histogram(aes(y=..count..), fill=&quot;green&quot;, alpha=0.5) +
+  labs(title=&quot;Histograma de no-relative&quot;, x=&quot;Valores&quot;, y=&quot;Frecuencia&quot;)
+
+# Genera 3er histograma
+factor_tabla6 &lt;- factor(tabla6, levels = c(&quot;S&quot;, &quot;N&quot;))
+
+# Data frame columna &quot;x&quot;
+data &lt;- data.frame(x = factor_tabla6)
+
+# Crear el histograma
+p3 &lt;- ggplot(data, aes(x = x)) + 
+  geom_bar(aes(y=..count../sum(..count..)), fill=&quot;yellow&quot;, alpha=0.5, stat = &quot;count&quot;) +
+  labs(title=&quot;Histograma de tabla6&quot;, x=&quot;Valores&quot;, y=&quot;Frecuencia&quot;)
+
+# Ordena los gráficos 
+theme_set(theme_classic())
+
+# Ordena filas y columnas
+ggarrange(p1, p2, p3, ncol=1, heights=c(1,1,1.2))</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+<p>PREGUNTA 2.3</p>
+<pre class="r"><code># Crea datos
+relative &lt;- tabla2
+no_relative &lt;- tabla3
+
+# Genera 1er histograma
+p1 &lt;- ggplot(data.frame(x=relative), aes(x=x)) + 
+  geom_histogram(aes(y=..count..), fill=&quot;yellow&quot;, alpha=0.5) +
+  labs(title=&quot;Histograma de relative&quot;, x=&quot;Valores&quot;, y=&quot;Frecuencia&quot;) 
+
+# Genera 2do histograma
+p2 &lt;- ggplot(data.frame(x=no_relative), aes(x=x)) + 
+  geom_histogram(aes(y=..count..), fill=&quot;green&quot;, alpha=0.5) +
+  labs(title=&quot;Histograma de no-relative&quot;, x=&quot;Valores&quot;, y=&quot;Frecuencia&quot;)
+
+# Genera 2do histograma
+factor_tabla6 &lt;- factor(tabla6, levels = c(&quot;S&quot;, &quot;N&quot;))
+
+# Data frame columna &quot;x&quot;
+data &lt;- data.frame(x = factor_tabla6)
+
+# Genera el histograma
+p3 &lt;- ggplot(data, aes(x = x)) + 
+  geom_bar(aes(y=..count../sum(..count..)), fill=&quot;yellow&quot;, alpha=0.5, stat = &quot;count&quot;) +
+  labs(title=&quot;Histograma de tabla6&quot;, x=&quot;Valores&quot;, y=&quot;Frecuencia&quot;)
+
+p4 &lt;- ggplot(data.frame(x=tabla7), aes(x= &quot;&quot;, fill = x)) + 
+  geom_bar(width = 1) + coord_polar(theta = &quot;y&quot;) +
+  labs(title=&quot;status code&quot;)
+
+# Ordena gráficos
+theme_set(theme_classic())
+
+# Reordena 2 filas, 1 columna 
+ggarrange(p1, p2, p3, p4, ncol=1, heights=c(1,1,1,1.2))</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+</div>
 
 
 
