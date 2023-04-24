@@ -80,7 +80,7 @@ print(links_url)
 
 Acontinuación se responden las preguntas 4 y 5:
 
-```{r link_table, echo = TRUE}
+```{r link_table, cache = TRUE, echo = TRUE}
 tabla <- data.frame(links_text = character(),
                     links_original_url = character(),
                     links_url = character(),
