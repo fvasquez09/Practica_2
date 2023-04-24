@@ -1,6 +1,5 @@
 ---
 title: "Practica_2"
-author: "Felipe Vásquez"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -26,7 +25,9 @@ library(knitr)
 library(stringr)
 ```
 
-### Pregunta 1
+### Integrantes:  Felipe Vásquez
+
+### Marco Ramos    Pregunta 1
 
 1\. Descargar la página web de la URL indicada, y almacenarlo en un formato de R apto para ser tratado.
 
